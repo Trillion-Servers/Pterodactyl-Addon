@@ -1,0 +1,2 @@
+start index.js
+pause
