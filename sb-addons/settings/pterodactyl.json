@@ -1,8 +1,11 @@
 {
   "Pterodactyl Addon": "v1.0",
-  "Panel_URL": "https://panel.trillionservers.xyz",
-  "API_KEY": "bs2qRvfxMtYCaUXLC2cJ3u73Z7izH6C1VsMIlcK71u0pjYiY",
-  "Command_Log_Channel": "Ticket-Log",
-  "StaffRole": ""
-  "AllServers_Command": "allservers"
+  "PANEL_URL": "",
+  "API_KEY": "",
+  "Command_Log_Channel": "ticket-log",
+  "StaffRole": "Staff",
+  "AllServers_Command": "allservers",
+  "StartServer_Command": "startserver",
+  "StopServer_Command": "stopserver",
+  "Send_Command": "send"
 }

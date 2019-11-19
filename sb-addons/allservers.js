@@ -5,9 +5,10 @@
 const Discord = require("discord.js");
 const pterodactyl = new Discord.Client()
 const Node = require('nodeactyl');
+const bot = new Discord.Client()
 
-bot.settings = require("../settings.json");
 pterodactyl.settings = require("./settings/pterodactyl.json")
+bot.settings = require("../settings.json");
 
 exports.run = async (client, message, args, level, ) => {
     message.delete();
@@ -15,7 +16,7 @@ exports.run = async (client, message, args, level, ) => {
     let staffGroup = message.guild.roles.find(staffRole => staffRole.name === `${pterodactyl.settings.StaffRole}`)
 
     const rolemissing = new Discord.RichEmbed()
-        .setDescription(`:x: Looks like this server doesn't have the role **${pterodactyl.settings.StaffRol}**`)
+        .setDescription(`:x: Looks like this server doesn't have the role **${pterodactyl.settings.StaffRole}**`)
         .setColor(pterodactyl.settings.colour)
     if (!staffGroup) return message.reply(rolemissing).catch(err => { console.error(err) })
 
@@ -31,8 +32,8 @@ exports.run = async (client, message, args, level, ) => {
         .setColor(pterodactyl.settings.colour)
         .setAuthor('Servers list')
         .setTimestamp()
-        .setFooter(pterodactyl.settings.footer);
-    
+        .setFooter(bot.settings.footer);
+
     Node.login(pterodactyl.settings.PANEL_URL, pterodactyl.settings.API_KEY, "client").catch(error => {
         if (error) {
         }
@@ -47,20 +48,7 @@ exports.run = async (client, message, args, level, ) => {
         });
         message.channel.send(serversEmbed);
     });
-
-    const CMDLog = new Discord.RichEmbed()
-        .setTitle(pterodactyl.settings.Commands_Log_Title)
-        .addField(`User`, `<@${message.author.id}>`)
-        .addField(`Command`, pterodactyl.settings.AllServers_Command, true)
-        .addField(`Executed At`, message.createdAt, true)
-        .setColor(pterodactyl.settings.colour)
-        .setFooter(pterodactyl.settings.footer)
-
-    let CommandLog = message.guild.channels.find(LogsChannel => LogsChannel.name === `${pterodactyl.settings.Command_Log_Channel}`);
-    if (!CommandLog) return message.channel.send(`:x: Error! Could not find the logs channel. **${pterodactyl.settings.Command_Log_Channel}**\nThis can be changed via ``settings.json```);
-
-    CommandLog.send(CMDLog);
-};
+}
 
 exports.help = {
     name: pterodactyl.settings.AllServers_Command,
