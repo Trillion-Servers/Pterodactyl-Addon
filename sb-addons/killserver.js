@@ -1,5 +1,5 @@
 // SupportBot Resource
-// Pterodactyl Suspend Command
+// Pterodactyl KillServer Command
 // Creator: Griffindor
 
 const Discord = require("discord.js");
@@ -10,10 +10,11 @@ const pterodactyl = new Discord.Client()
 bot.settings = require("../settings.json");
 pterodactyl.settings = require("./settings/pterodactyl.json")
 
-exports.run = async (client, message, args, level,) => {
+exports.run = async (client, message, args, level, ) => {
     message.delete();
 
     let staffGroup = message.guild.roles.find(staffRole => staffRole.name === `${pterodactyl.settings.StaffRole}`)
+
     const rolemissing = new Discord.RichEmbed()
         .setDescription(`:x: Looks like this server doesn't have the role **${pterodactyl.settings.StaffRole}**`)
         .setColor(bot.settings.colour)
@@ -24,32 +25,17 @@ exports.run = async (client, message, args, level,) => {
         .setColor(bot.settings.colour)
     if (!message.member.roles.has(staffGroup.id)) return message.reply(donothaverole)
 
-Node.login(pterodactyl.settings.PANEL_URL, pterodactyl.settings.ADMIN_API, "application").catch(error => {
+    console.log(`\x1b[36m`, `${message.author} has executed ${bot.settings.prefix}${pterodactyl.settings.KillServer_Command}`)
+
+    Node.login(pterodactyl.settings.PANEL_URL, pterodactyl.settings.API_KEY, "client").catch(error => {
         if (error) {
         }
     });
 
     let serverid = args[0];
-    try {
-        Node.suspend(serverid);
-        const successEmbed = new Discord.RichEmbed()
-            .setColor('#2dce89')
-            .setAuthor('Success')
-            .setDescription('The server has been suspended')
-            .setTimestamp()
-            .setFooter('Pterodactyl');
-        message.channel.send(successEmbed);
-    } catch (error) {
-        const errorEmbed = new Discord.RichEmbed()
-            .setColor('#f5365c')
-            .setAuthor('Error')
-            .setDescription('The server has failed to be suspended')
-            .setTimestamp()
-            .setFooter('Pterodactyl');
-        message.channel.send(errorEmbed);
-    }
+    Node.killServer(serverid);
 };
 
 exports.help = {
-    name: pterodactyl.settings.Suspend_Command,
+    name: pterodactyl.settings.KillServer_Command,
 }

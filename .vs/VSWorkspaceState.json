@@ -1,9 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\sb-addons",
-    "\\sb-addons\\settings"
+    "\\commands",
+    "\\sb-addons"
   ],
-  "SelectedNode": "\\index.js",
+  "SelectedNode": "\\sb-addons\\createuser.js",
   "PreviewInSolutionExplorer": false
 }

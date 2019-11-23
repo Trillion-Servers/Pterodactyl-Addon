@@ -1,15 +1,18 @@
 {
-  "Pterodactyl Addon": "v1.0",
-  "PANEL_URL": "",
-  "API_KEY": "",
   "ADMIN_API": "",
-  "Command_Log_Channel": "ticket-log",
-  "StaffRole": "Staff",
   "AllServers_Command": "allservers",
+  "API_KEY": "",
+  "Command_Log_Channel": "ticket-log",
+  "EveryServer_Command": "everyserver",
+  "KillServer_Command": "killserver",
+  "PANEL_URL": "",
+  "Pterodactyl Addon": "v1.0",
+  "Rebuild_Command": "rebuild",
+  "RestartServer_Command": "restartserver",
+  "Send_Command": "send",
+  "StaffRole": "Staff",
   "StartServer_Command": "startserver",
   "StopServer_Command": "stopserver",
   "Suspend_Command": "suspend",
-  "UnSuspend_Command": "unsuspend",
-  "Rebuild_Command": "rebuild",
-  "Send_Command": "send"
+  "UnSuspend_Command": "unsuspend"
 }

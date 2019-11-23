@@ -1,5 +1,5 @@
 // SupportBot Resource
-// Pterodactyl Send Command
+// Pterodactyl StartServer Command
 // Creator: Griffindor
 
 const Discord = require("discord.js");
