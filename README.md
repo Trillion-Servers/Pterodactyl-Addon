@@ -1,6 +1,6 @@
 # Pterodactyl-Addon
-This Addon is created using nodeactyl which is a wrapper for pterodactyl.
-Client Commands:
+This Addon is created using nodeactyl which is a wrapper for pterodactyl.\n
+Client Commands:\n
 -startserver serverid
 -stopserver serverid
 -restartserver serverid
