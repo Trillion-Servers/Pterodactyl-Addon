@@ -32,9 +32,9 @@ exports.run = (bot, message, args) => {
         staffCommands += `**${bot.settings.prefix}${bot.settings.UnLockchat_Command}**: UnLock the chat channel\n`;
         staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.Send_Command} ServerID**: Sends a command to the server\n`;
         staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.AllServers_Command}**: Lists all servers connected to that account\n`;
-        staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.Suspend_Command} ServerID**: Suspends the server\n`;
-        staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.UnSuspend_Command} ServerID**: Unsuspends the server\n`;
-        staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.Rebuild_Command} ServerID**: Rebuilds the server\n`;
+        staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.Suspend_Command} ExternalID**: Suspends the server\n`;
+        staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.UnSuspend_Command} ExternalID**: Unsuspends the server\n`;
+        staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.Rebuild_Command} ExternalID**: Rebuilds the server\n`;
         staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.StartServer_Command} ServerID**: Starts the Server\n`;
         staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.StopServer_Command} ServerID**: Stops the Server\n`;
         staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.KillServer_Command} ServerID**: Kills the Server\n`;

@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\commands",
-    "\\sb-addons"
+    "\\sb-addons",
+    "\\sb-addons\\settings"
   ],
-  "SelectedNode": "\\sb-addons\\createuser.js",
+  "SelectedNode": "\\sb-addons\\suspend.js",
   "PreviewInSolutionExplorer": false
 }

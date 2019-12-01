@@ -10,7 +10,7 @@ const pterodactyl = new Discord.Client()
 bot.settings = require("../settings.json");
 pterodactyl.settings = require("./settings/pterodactyl.json")
 
-exports.run = async (client, message, args, level,) => {
+exports.run = async (client, message, args, level, ) => {
     message.delete();
 
     let staffGroup = message.guild.roles.find(staffRole => staffRole.name === `${pterodactyl.settings.StaffRole}`)
@@ -24,7 +24,7 @@ exports.run = async (client, message, args, level,) => {
         .setColor(bot.settings.colour)
     if (!message.member.roles.has(staffGroup.id)) return message.reply(donothaverole)
 
-Node.login(pterodactyl.settings.PANEL_URL, pterodactyl.settings.ADMIN_API, "application").catch(error => {
+    Node.login(pterodactyl.settings.PANEL_URL, pterodactyl.settings.ADMIN_API, "application").catch(error => {
         if (error) {
         }
     });

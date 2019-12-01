@@ -1,4 +1,5 @@
 {
+  "Pterodactyl Addon": "v1.1",
   "ADMIN_API": "",
   "AllServers_Command": "allservers",
   "API_KEY": "",
@@ -6,7 +7,6 @@
   "EveryServer_Command": "everyserver",
   "KillServer_Command": "killserver",
   "PANEL_URL": "",
-  "Pterodactyl Addon": "v1.0",
   "Rebuild_Command": "rebuild",
   "RestartServer_Command": "restartserver",
   "Send_Command": "send",
