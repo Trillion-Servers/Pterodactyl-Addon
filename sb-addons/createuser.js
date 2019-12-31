@@ -1,5 +1,5 @@
 // SupportBot Resource
-// Pterodactyl Unsuspend Command
+// Pterodactyl Create User Command
 // Creator: Griffindor
 
 const Discord = require("discord.js");
@@ -10,7 +10,7 @@ const pterodactyl = new Discord.Client()
 bot.settings = require("../settings.json");
 pterodactyl.settings = require("./settings/pterodactyl.json")
 
-exports.run = async (client, message, args, level, ) => {
+exports.run = async (client, message, args) => {
     message.delete();
 
     let staffGroup = message.guild.roles.find(staffRole => staffRole.name === `${pterodactyl.settings.StaffRole}`)
@@ -30,14 +30,18 @@ exports.run = async (client, message, args, level, ) => {
         }
     });
 
-    let serverid = args[0];
+    let Username = args[0];
+    let Email = args[1];
+    let FirstName = args[2];
+    let LastName = args[3];
+    let Password = args[4];
     let command = args.slice(1).toString().replace(',', ' ');
     try {
-        Node.unSuspend(serverid);
+        Node.createUser(Username, Email, FirstName, LastName, Password);
         const successEmbed = new Discord.RichEmbed()
             .setColor('#2dce89')
             .setAuthor('Success')
-            .setDescription('The server has been unsuspended')
+            .setDescription(`The User has been created.You can login here ${pterodactyl.settings.Panel_URL}`)
             .setTimestamp()
             .setFooter('Pterodactyl');
         message.channel.send(successEmbed);
@@ -45,7 +49,7 @@ exports.run = async (client, message, args, level, ) => {
         const errorEmbed = new Discord.RichEmbed()
             .setColor('#f5365c')
             .setAuthor('Error')
-            .setDescription('The server has failed to be unsuspended')
+            .setDescription('UserCreate Failed')
             .setTimestamp()
             .setFooter('Pterodactyl');
         message.channel.send(errorEmbed);
@@ -53,5 +57,5 @@ exports.run = async (client, message, args, level, ) => {
 };
 
 exports.help = {
-    name: pterodactyl.settings.UnSuspend_Command,
+    name: pterodactyl.settings.CreateUser_Command,
 }

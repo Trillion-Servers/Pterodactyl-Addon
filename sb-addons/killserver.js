@@ -27,7 +27,7 @@ exports.run = async (client, message, args, level, ) => {
 
     console.log(`\x1b[36m`, `${message.author} has executed ${bot.settings.prefix}${pterodactyl.settings.KillServer_Command}`)
 
-    Node.login(pterodactyl.settings.PANEL_URL, pterodactyl.settings.API_KEY, "client").catch(error => {
+    Node.login(pterodactyl.settings.Panel_URL, pterodactyl.settings.API_KEY, pterodactyl.settings.Client_Protocol).catch(error => {
         if (error) {
         }
     });

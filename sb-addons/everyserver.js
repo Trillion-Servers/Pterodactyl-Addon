@@ -34,7 +34,7 @@ exports.run = async (client, message, args, level, ) => {
         .setTimestamp()
         .setFooter(bot.settings.footer);
 
-    Node.login(pterodactyl.settings.PANEL_URL, pterodactyl.settings.ADMIN_API, "application").catch(error => {
+    Node.login(pterodactyl.settings.Panel_URL, pterodactyl.settings.Admin_API, pterodactyl.settings.Admin_Protocol).catch(error => {
         if (error) {
         }
     });

@@ -40,6 +40,7 @@ exports.run = (bot, message, args) => {
         staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.KillServer_Command} ServerID**: Kills the Server\n`;
         staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.RestartServer_Command} ServerID**: Restarts the Server\n`;
         staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.EveryServer_Command}**: Lists all Servers on the Panel\n`;
+        staffCommands += `**${bot.settings.prefix}${pterodactyl.settings.CreateUser_Command}**: Creates a User on the Panel\n`;
 
     const embed = new Discord.RichEmbed()
         .setTitle(bot.settings.botname)

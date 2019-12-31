@@ -24,7 +24,7 @@ exports.run = async (client, message, args, level, ) => {
         .setColor(bot.settings.colour)
     if (!message.member.roles.has(staffGroup.id)) return message.reply(donothaverole)
 
-    Node.login(pterodactyl.settings.PANEL_URL, pterodactyl.settings.ADMIN_API, "application").catch(error => {
+    Node.login(pterodactyl.settings.Panel_URL, pterodactyl.settings.Admin_API, pterodactyl.settings.Admin_Protocol).catch(error => {
         if (error) {
         }
     });
