@@ -25,11 +25,11 @@ Admin Commands:
 
 -everyserver(Lists all the Servers that are on the panel)
 
+-CreateUser(Creates a User)
+
 Coming Soon Features:
 
 -Commands Logging for all Commands
-
--CreateUser
 
 -Reinstall
 
