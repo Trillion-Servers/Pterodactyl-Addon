@@ -1,6 +1,6 @@
 // SupportBot
 // Created by © 2020 Emerald Services
-// Command: Say
+// Command: Ticket
 
 const Discord = require("discord.js");
 const bot = new Discord.Client();
@@ -22,47 +22,46 @@ exports.run = async (bot, message, args) => {
 	const subject = args.join(" ") || `${supportbot.Default_Ticket_Reason}`;
 
     // Ticket Limitiations
-	const alreadyopen = new Discord.RichEmbed()
+	const alreadyopen = new Discord.MessageEmbed()
         	.setDescription(`:x: Cannot create a ticket because **${supportbot.Ticket_Channel_Name}-${ticketNumberID}** already exists.`)
         	.setColor(supportbot.EmbedColour)
     
     // Ticket Creation
-    	if (message.guild.channels.find(TicketChannel => TicketChannel.name === `${supportbot.Ticket_Channel_Name}-` + message.author.username)) return message.channel.send(alreadyopen);
-    		message.guild.createChannel(`${supportbot.Ticket_Channel_Name}-${ticketNumberID}`, {
+    	if (message.guild.channels.cache.find(TicketChannel => TicketChannel.name === `${supportbot.Ticket_Channel_Name}-` + message.author.username)) return message.channel.send(alreadyopen);
+    		message.guild.channels.create(`${supportbot.Ticket_Channel_Name}-${ticketNumberID}`, {
 			type: 'text',
 		}).then(TicketChannel => {
         
     // Roles
-        let staff = message.guild.roles.find(supportRole => supportRole.name === `${supportbot.StaffRole}`)
-        let everyone = message.guild.roles.find(everyoneRole => everyoneRole.name === "@everyone")
-        let department = message.guild.roles.find(DepartmentRole => DepartmentRole.name === `${supportbot.Department_Role_1}`)
-        let department2 = message.guild.roles.find(DepartmentRole => DepartmentRole.name === `${supportbot.Department_Role_2}`)
-        let department3 = message.guild.roles.find(DepartmentRole => DepartmentRole.name === `${supportbot.Department_Role_3}`)
+        let staff = message.guild.roles.cache.find(supportRole => supportRole.name === `${supportbot.StaffRole}`)
+        let everyone = message.guild.roles.cache.find(everyoneRole => everyoneRole.name === supportbot.everyone)
+        let department = message.guild.roles.cache.find(DepartmentRole => DepartmentRole.name === `${supportbot.Department_Role_1}`)
+        let department2 = message.guild.roles.cache.find(DepartmentRole => DepartmentRole.name === `${supportbot.Department_Role_2}`)
+        let department3 = message.guild.roles.cache.find(DepartmentRole => DepartmentRole.name === `${supportbot.Department_Role_3}`)
 
     // Permissions
-        TicketChannel.overwritePermissions(everyone, { SEND_MESSAGES: false, READ_MESSAGES: false })
-        TicketChannel.overwritePermissions(department, { SEND_MESSAGES: false, READ_MESSAGES: false })
-        TicketChannel.overwritePermissions(department2, { SEND_MESSAGES: false, READ_MESSAGES: false })
-        TicketChannel.overwritePermissions(department3, { SEND_MESSAGES: false, READ_MESSAGES: false })
-        TicketChannel.overwritePermissions(staff, { SEND_MESSAGES: true, READ_MESSAGES: true })
-        TicketChannel.overwritePermissions(message.author, { SEND_MESSAGES: true, READ_MESSAGES: true })
-        TicketChannel.overwritePermissions(bot.user, { SEND_MESSAGES: true, READ_MESSAGES: true })
+        TicketChannel.updateOverwrite(everyone, { VIEW_CHANNEL: false });
+        TicketChannel.updateOverwrite(message.author, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: false, READ_MESSAGES: true });
+        TicketChannel.updateOverwrite(staff, { VIEW_CHANNEL: true, CREATE_INVITE: false, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+        TicketChannel.updateOverwrite(department, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+        TicketChannel.updateOverwrite(department2, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+        TicketChannel.updateOverwrite(department3, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
 
     // Category
-    let category = message.guild.channels.find(c => c.name === supportbot.category);
+    let category = message.guild.channels.cache.find(c => c.name === supportbot.category);
         if (category) {
             TicketChannel.setParent(category.id);
         } else {
-            if (message.guild.channels.get(supportbot.category)) {
-                TicketChannel.setParent(message.guild.channels.get(supportbot.category).id);
+            if (message.guild.channels.cache.get(supportbot.category)) {
+                TicketChannel.setParent(message.guild.channels.cache.get(supportbot.category).id);
             }
         }
         
-    const ticketopened = new Discord.RichEmbed()
+    const ticketopened = new Discord.MessageEmbed()
         .setTitle(":white_check_mark: Support Ticket Created")
         .setDescription(`<@${message.author.id}> your support ticket created successfully`)
         .addField("Your Ticket:", `<#${TicketChannel.id}>`)
-        .setColor(supportbot.Ticket_Colour)
+        .setColor(supportbot.SuccessColour)
     message.channel.send({embed: ticketopened});
     // Ticket Message - ( Able to edit this message via the settings.json file )
     const ticketMessage = `Hi! <@${message.author.id}>\n${supportbot.Ticket_Message}`;
@@ -75,7 +74,7 @@ exports.run = async (bot, message, args) => {
     const Emoji_2 = supportbot.Ticket_Department_Emoji_2;
     const Emoji_3 = supportbot.Ticket_Department_Emoji_3;
 
-    const TicketMessage = new Discord.RichEmbed()
+    const TicketMessage = new Discord.MessageEmbed()
         .setDescription(ticketMessage, true)
         .addField("Available Departments", `${Emoji_1} ${Department_1}\n${Emoji_2} ${Department_2}\n${Emoji_3} ${Department_3}`)
         .setColor(supportbot.Ticket_Colour)
@@ -99,24 +98,36 @@ exports.run = async (bot, message, args) => {
             const reaction = collected.first();
 
         if (reaction.emoji.name === `${Emoji_1}`) {
-			TicketChannel.overwritePermissions(staff, { SEND_MESSAGES: true, READ_MESSAGES: true })
-            TicketChannel.overwritePermissions(department, { SEND_MESSAGES: true, READ_MESSAGES: true })
-
-            msg.channel.send("You have contacted out " + department + "\nPlease wait patiently for someone to reach out to you.")
+            TicketChannel.updateOverwrite(message.author, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+			TicketChannel.updateOverwrite(staff, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+			TicketChannel.updateOverwrite(department, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+			
+            const dept1 = new Discord.MessageEmbed()
+                .setDescription(`You have requested to contact ${department}. Please wait patiently for someone to reach out to you.`)
+                .setColor(supportbot.SuccessColour)
+            TicketChannel.send(dept1)
         }
 
         if (reaction.emoji.name === `${Emoji_2}`) {
-			TicketChannel.overwritePermissions(staff, { SEND_MESSAGES: true, READ_MESSAGES: true })
-            TicketChannel.overwritePermissions(department2, { SEND_MESSAGES: true, READ_MESSAGES: true })
+            TicketChannel.updateOverwrite(message.author, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+			TicketChannel.updateOverwrite(staff, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+			TicketChannel.updateOverwrite(department2, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
 
-            msg.channel.send("You have contacted out " + department2 + "\nPlease wait patiently for someone to reach out to you.")
+            const dept2 = new Discord.MessageEmbed()
+                .setDescription(`You have requested to contact ${department2}. Please wait patiently for someone to reach out to you.`)
+                .setColor(supportbot.SuccessColour)
+            TicketChannel.send(dept2)
         }
 
         if (reaction.emoji.name === `${Emoji_3}`) {
-			TicketChannel.overwritePermissions(staff, { SEND_MESSAGES: true, READ_MESSAGES: true })
-            TicketChannel.overwritePermissions(department3, { SEND_MESSAGES: true, READ_MESSAGES: true })
-
-            msg.channel.send("You have contacted out " + department3 + "\nPlease wait patiently for someone to reach out to you.")
+            TicketChannel.updateOverwrite(message.author, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+			TicketChannel.updateOverwrite(staff, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+			TicketChannel.updateOverwrite(department3, { VIEW_CHANNEL: true, CREATE_INVITE: false, SEND_MESSAGES: true, READ_MESSAGES: true });
+			
+            const dept3 = new Discord.MessageEmbed()
+                .setDescription(`You have requested to contact ${department3}. Please wait patiently for someone to reach out to you.`)
+                .setColor(supportbot.SuccessColour)
+            TicketChannel.send(dept3)
         }
 
         });
@@ -124,8 +135,8 @@ exports.run = async (bot, message, args) => {
     });
 
     // Ticket Logging
-    const logEmbed = new Discord.RichEmbed()
-        .setTitle(":ticket: Logistics of your Ticket")
+    const logEmbed = new Discord.MessageEmbed()
+        .setTitle(":ticket: Ticket Log")
         .addField("Ticket ID", ticketNumberID, true)
         .addField("User", `<@${message.author.id}>`, true)
         .addField("Channel", `ticket#${ticketNumberID}`, true)
@@ -136,10 +147,15 @@ exports.run = async (bot, message, args) => {
         logEmbed.addField('Subject', subject, true);
     }
   
-    let logChannel = message.guild.channels.find(TicketChannel => TicketChannel.name === `${supportbot.Ticket_Logs}`);
-    if(!logChannel) return message.channel.send(`:x: Error! Could not find the logs channel **${supportbot.Ticket_Logs}**`);
-    
-    logChannel.send({embed: logEmbed})
+    let locateChannel = message.guild.channels.cache.find(LocateChannel => LocateChannel.name === `${supportbot.Ticket_Logs}`)
+
+    const errornochannel = new Discord.MessageEmbed()
+        .setTitle("SupportBot Error!")
+        .setDescription(`:x: **Error!** Channel not Found, This command cannot be executed proberbly as their is no channel within this server.\nThis is configurable via **supportbot-config.yml**\n\nChannel Required: \`${supportbot.Ticket_Logs}\`\n\nError Code: \`SB-03\``)
+        .setColor(supportbot.ErrorColour);
+    if(!locateChannel) return message.channel.send(errornochannel);
+        
+    locateChannel.send(logEmbed)
 
     }).catch(err=>{console.error(err)});
     

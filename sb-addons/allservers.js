@@ -3,53 +3,47 @@
 // Creator: Griffindor
 
 const Discord = require("discord.js");
-const pterodactyl = new Discord.Client()
-const Node = require('nodeactyl');
+const node = require('nodeactyl');
+const Client = node.Client;
 const bot = new Discord.Client()
+const fs = require("fs")
+const yaml = require('js-yaml');
 
-pterodactyl.settings = require("./settings/pterodactyl.json")
-bot.settings = require("../settings.json");
+const supportbot = yaml.load(fs.readFileSync('./supportbot-config.yml', 'utf8'));
+const pterodactyl = yaml.load(fs.readFileSync('./sb-addons/settings/pterodactyl-config.yml', 'utf8'));
 
-exports.run = async (client, message, args, level, ) => {
+exports.run = async (Client, message, args, level, ) => {
     message.delete();
 
-    let staffGroup = message.guild.roles.find(staffRole => staffRole.name === `${pterodactyl.settings.StaffRole}`)
+    let staffGroup = message.guild.roles.find(staffRole => staffRole.name === `${pterodactyl.StaffRole}`)
 
     const rolemissing = new Discord.RichEmbed()
-        .setDescription(`:x: Looks like this server doesn't have the role **${pterodactyl.settings.StaffRole}**`)
-        .setColor(pterodactyl.settings.colour)
+        .setDescription(`:x: Looks like this server doesn't have the role **${pterodactyl.StaffRole}**`)
+        .setColor(pterodactyl.colour)
     if (!staffGroup) return message.reply(rolemissing).catch(err => { console.error(err) })
 
     const donothaverole = new Discord.RichEmbed()
-        .setDescription(`:x: Sorry! You cannot use this command with the role **${pterodactyl.settings.StaffRole}**`)
-        .setColor(pterodactyl.settings.colour)
+        .setDescription(`:x: Sorry! You cannot use this command with the role **${pterodactyl.StaffRole}**`)
+        .setColor(supportbot.colour)
     if (!message.member.roles.has(staffGroup.id)) return message.reply(donothaverole)
 
-    console.log(`\x1b[36m`, `${message.author} has executed ${bot.settings.prefix}${pterodactyl.settings.AllServers_Command}`)
+    console.log(`\x1b[36m`, `${message.author} has executed ${supportbot.prefix}${pterodactyl.AllServers_Command}`)
 
-
-    const serversEmbed = new Discord.RichEmbed()
-        .setColor(pterodactyl.settings.colour)
-        .setAuthor('Servers list')
-        .setTimestamp()
-        .setFooter(bot.settings.footer);
-
-    Node.login(pterodactyl.settings.PANEL_URL, pterodactyl.settings.API_KEY, "client").catch(error => {
-        if (error) {
-        }
+    Client.login(pterodactyl.PANEL_URL, pterodactyl.API_KEY, (logged_in) => {
+        console.log(logged_in);
     });
 
-    Node.getAllServers().then(response => {
-        response['data'].forEach(function (element) {
-            serversEmbed.addField(
-                "__" + element.attributes.name + "__",
-                "***ID*** : " + element.attributes.identifier +
-                "\n***RAM*** : " + element.attributes.limits.memory);
-        });
-        message.channel.send(serversEmbed);
-    });
+    Client.getAllServers().then((response) => {
+        response.forEach(Element => {
+            let TestEmbed = new discord.RichEmbed()
+                .setDescription(`${Element}`)
+            message.channel.send(TestEmbed);
+        }).catch((error) => {
+            console.log(error);
+        })
+    })
 }
 
 exports.help = {
-    name: pterodactyl.settings.AllServers_Command,
+    name: pterodactyl.AllServers_Command,
 }
