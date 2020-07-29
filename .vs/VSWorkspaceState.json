@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\commands",
-    "\\sb-addons"
+    "\\sb-addons",
+    "\\sb-addons\\settings"
   ],
-  "SelectedNode": "\\sb-addons\\allservers.js",
+  "SelectedNode": "\\application",
   "PreviewInSolutionExplorer": false
 }
