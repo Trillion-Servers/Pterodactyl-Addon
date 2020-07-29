@@ -1,53 +1,58 @@
-// SupportBot
-// Command: Suggest
+// SupportBot 6.0, Created by Emerald Services
+// Suggest Command
 
 const Discord = require("discord.js");
-const bot = new Discord.Client()
+const fs = require("fs");
 
-bot.settings = require("../settings.json");
+const yaml = require('js-yaml');
+const supportbot = yaml.load(fs.readFileSync('./supportbot-config.yml', 'utf8'));
 
-exports.run = async(bot, message, args) => {
-    message.delete();
+module.exports = {
+    name: supportbot.SuggestCommand,
+    description: supportbot.SuggestionDesc,
 
-    const SuggestionEmbed = new Discord.RichEmbed()
-        .setTitle(`${bot.settings.Suggestion_Title}`)
-        .setDescription(`\`\`\`${args.join(" ")}\`\`\`\nFrom <@${message.author.id}>`)
-        .setFooter(`${bot.settings.footer}`, message.author.avatarURL)
-        .setTimestamp(new Date())
-        .setColor(bot.settings.colour);
+    execute(message, args) {
+        let locateChannel = message.guild.channels.cache.find(SuggestionChannel => SuggestionChannel.name === supportbot.SuggestionChannel);
+
+        const errornochannel = new Discord.MessageEmbed()
+            .setTitle("Invalid Channel")
+            .setDescription(`${supportbot.InvalidChannel}\n\nChannel Required: \`${supportbot.SuggestionChannel}\``)
+            .setColor(supportbot.ErrorColour);
+
+        if(!locateChannel) return message.channel.send({ embed: errornochannel });
+
+        const embed = new Discord.MessageEmbed()
+            .setDescription(`> **${supportbot.SuggestionStarter}**`)
+	        .setColor(supportbot.EmbedColour)
+        message.channel.send({ embed: embed });
+
+        let suggestion = []
+        message.channel.awaitMessages(response => response.content.length > 2, {
+            max: 1,
+            time: 500000,
+            errors: ['time'],
+        }).then((collected) => {
+            suggestion.push(collected.map(r => r.content));
+
+            const SuggestionMessage = new Discord.MessageEmbed()
+                .setColor(supportbot.EmbedColour)
+                .setFooter(supportbot.EmbedFooter)
+
+                .setTitle(supportbot.SuggestionTitle)
+                .setDescription(`\`\`\`${suggestion}\`\`\``)
+
+                .addFields( { name: "From", value: `<@${message.author.id}>`, inline: false }, )
+
+            locateChannel.send({ embed: SuggestionMessage }).then(async function(msg) {
+                msg.react(supportbot.SuggestReact_1).then(() => msg.react(supportbot.SuggestReact_2));
+            });
+
+            const SuggestionComplete = new Discord.MessageEmbed()
+                .setColor(supportbot.SuccessColour)
+                .setDescription(`:white_check_mark: Your suggestion has been successfully created. <#${locateChannel.id}>`)
+            message.channel.send({ embed: SuggestionComplete })
+
+        });
     
-    let sc = message.guild.channels.find(SuggestionChannel => SuggestionChannel.name === `${bot.settings.Suggestion_Channel}`);
-    if(!sc) return message.channel.send(`:x: Error! Could not find the suggestion channel **${bot.settings.Suggestion_Channel}**`);
-    
-    sc.send(SuggestionEmbed)
-
-    .then(async function(msg) {
-        msg.react(bot.settings.suggestyes).then(() => msg.react(bot.settings.suggestno));
-    });
-
-    const SuggestionSuccessEmbed = new Discord.RichEmbed()
-        .setDescription(`:white_check_mark: You have successfully created your suggestion. <#${sc.id}>`)
-        .setColor(bot.settings.colour)
-    message.channel.send(SuggestionSuccessEmbed);
-
-    console.log(`\x1b[36m`, `${message.author} has executed ${bot.settings.prefix}${bot.settings.Suggest_Command}`)
-
-    const CMDLog = new Discord.RichEmbed()
-        .setTitle(bot.settings.Commands_Log_Title)
-        .addField(`User`, `<@${message.author.id}>`)
-        .addField(`Command`, bot.settings.Suggest_Command, true)
-        .addField(`Channel`, message.channel, true)
-        .addField(`Executed At`, message.createdAt, true)
-        .setColor(bot.settings.colour)
-        .setFooter(bot.settings.footer)
-
-    let CommandLog = message.guild.channels.find(LogsChannel => LogsChannel.name === `${bot.settings.Command_Log_Channel}`);
-    if(!CommandLog) return message.channel.send(`:x: Error! Could not find the logs channel. **${bot.settings.Command_Log_Channel}**`);
-    
-    CommandLog.send(CMDLog);
-
-}
-
-exports.help = {
-    name: bot.settings.Suggest_Command,
-}
+    }
+};

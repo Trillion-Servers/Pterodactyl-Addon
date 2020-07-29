@@ -1,48 +1,33 @@
-// SupportBot
-// Command: Help
+// SupportBot 6.0, Created by Emerald Services
+// Links Command
 
-const Discord = require( "discord.js" );
-const bot = new Discord.Client()
+const Discord = require("discord.js");
+const fs = require("fs");
 
-bot.settings = require( "../settings.json" );
+const yaml = require('js-yaml');
+const { execute } = require("./help");
+const supportbot = yaml.load(fs.readFileSync('./supportbot-config.yml', 'utf8'));
 
-exports.run = ( bot, message, args ) => {
-    message.delete();
+module.exports = {
+    name: supportbot.LinksCommand,
+    description: supportbot.LinksDesc,
 
-    let botLinks = bot.settings.LINKS;
+    execute(message, args) {
+        
+        const LinksEmbed = new Discord.MessageEmbed()
+            .setColor(supportbot.EmbedColour)
 
-    let links = '';
+        let botLinks = supportbot.LINKS;
+        
+        let links = '';
+        
+        for ( let name in botLinks ) {
+            links += `[${name}](${botLinks[ name ]})\n`;
+        };
 
-    for ( let name in botLinks ) {
-        links += `[${name}](${botLinks[ name ]})\n`;
+        LinksEmbed.addField(supportbot.LinksTitle, links)
+
+        message.channel.send({ embed: LinksEmbed });
+
     }
-
-    let embed = new Discord.RichEmbed()
-        .setTitle( bot.settings.LINKS_TITLE )
-        .setDescription( links )
-        .setColor( bot.settings.colour )
-        .setFooter( bot.settings.footer )
-
-    message.channel.send( embed );
-
-    console.log( `\x1b[36m`, `${message.author} has executed ${bot.settings.prefix}${bot.settings.Link_Command}` )
-
-    const CMDLog = new Discord.RichEmbed()
-        .setTitle(bot.settings.Commands_Log_Title)
-        .addField(`User`, `<@${message.author.id}>`)
-        .addField(`Command`, bot.settings.Link_Command, true)
-        .addField(`Channel`, message.channel, true)
-        .addField(`Executed At`, message.createdAt, true)
-        .setColor(bot.settings.colour)
-        .setFooter(bot.settings.footer)
-
-    let CommandLog = message.guild.channels.find(LogsChannel => LogsChannel.name === `${bot.settings.Command_Log_Channel}`);
-    if(!CommandLog) return message.channel.send(`:x: Error! Could not find the logs channel. **${bot.settings.Command_Log_Channel}**\nThis can be changed via ``settings.json```);
-    
-    CommandLog.send(CMDLog);
-
-}
-
-exports.help = {
-    name: bot.settings.Link_Command,
-}
+};
