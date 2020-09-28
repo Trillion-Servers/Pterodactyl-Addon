@@ -20,3 +20,4 @@ sendcommand| In Progress | Client
 getServerStatus| In Progress | Client
 SuspendServer| Not Started | Admin
 UnSuspendServer| Not Started | Admin
+Lnk Command| In Progress| Client and Admin
