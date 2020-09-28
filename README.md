@@ -11,12 +11,12 @@ Server Status| Not Started | Client
 CPU Usage| Not Started | Client
 Ram Usage| Not Started | Client
 Disk Usage| Not Started | Client
-Getallservers| Not Started | Client
+Getallservers|In Progress | Client
 startserver| Not Started | Client
 stopserver| Not Started | Client
 killserver| Not Started | Client
 restartserver| Not Started | Client
-sendcommand| Not Started | Client
-getServerStatus| Not Started | Client
+sendcommand| In Progress | Client
+getServerStatus| In Progress | Client
 SuspendServer| Not Started | Admin
 UnSuspendServer| Not Started | Admin
