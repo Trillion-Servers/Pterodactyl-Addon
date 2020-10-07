@@ -3,6 +3,8 @@
 This Addon is created using nodeactyl which is a wrapper for pterodactyl.
 
 
+
+
 Commands | Status | Client or Admin
 ------------ | ------------- | -------------
 Create Server | Not Started | Admin
