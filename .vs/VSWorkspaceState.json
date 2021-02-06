@@ -1,10 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\commands",
-    "\\sb-addons",
-    "\\sb-addons\\settings"
+    "\\addons"
   ],
-  "SelectedNode": "\\application",
+  "SelectedNode": "\\supportbot-config.yml",
   "PreviewInSolutionExplorer": false
 }
