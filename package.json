@@ -5,8 +5,9 @@
   "main": "index.js",
   "dependencies": {
     "discord.js": "^12.5.1",
+    "fs": "0.0.1-security",
     "javascript-obfuscator": "^2.9.4",
-    "js-yaml": "^3.14.0"
+    "js-yaml": "^4.0.0"
   },
   "devDependencies": {
     "node-fetch": ">=2.6.1"

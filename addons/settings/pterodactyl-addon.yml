@@ -3,7 +3,5 @@
 # Pterodactyl Addon
 # Created by Griffindor
 
-PterodactylAddonCommand: "Coming Soon"
-PterodactylAddonDesc: "Coming Soon."
-
-PterodactylAddonMessage: ">Coming Soon"
+PterodactylSetup: "pterosetup"
+PterodactylSetupDesc: "Pterodactyl Setup Command"
