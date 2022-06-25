@@ -10,7 +10,7 @@
     "js-yaml": "^4.0.0"
   },
   "devDependencies": {
-    "node-fetch": ">=2.6.1"
+    "node-fetch": ">=2.6.7"
   },
   "scripts": {
     "test": "help"
