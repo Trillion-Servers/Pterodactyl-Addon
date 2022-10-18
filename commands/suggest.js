@@ -1,62 +1,84 @@
-// SupportBot, Created by Emerald Services
+// SupportBot | Emerald Services
 // Suggest Command
 
-const Discord = require("discord.js");
 const fs = require("fs");
 
-const yaml = require('js-yaml');
-const supportbot = yaml.load(fs.readFileSync('./supportbot-config.yml', 'utf8'));
+const Discord = require("discord.js");
+const yaml = require("js-yaml");
+const supportbot = yaml.load(
+  fs.readFileSync("./Configs/supportbot.yml", "utf8")
+);
+const cmdconfig = yaml.load(fs.readFileSync("./Configs/commands.yml", "utf8"));
 
-module.exports = {
-    name: supportbot.SuggestCommand,
-    description: supportbot.SuggestionDesc,
+const Command = require("../Structures/Command.js");
 
-    execute(message, args) {
-	if (supportbot.DeleteMessages == "true") message.delete();
-	    
-        let locateChannel = message.guild.channels.cache.find(SuggestionChannel => SuggestionChannel.name === supportbot.SuggestionChannel);
+module.exports = new Command({
+  name: cmdconfig.SuggestCommand,
+  description: cmdconfig.SuggestCommandDesc,
+  options: [
+    {
+      name: "suggestion",
+      description: "Create a Suggestion",
+      type: "STRING",
+      required: true,
+    },
+  ],
+  permissions: ["SEND_MESSAGES"],
 
-        console.log(`\u001b[32m`, `[${supportbot.Bot_Name}]:`, `\u001b[32m`, `${message.author.tag} has executed ${supportbot.Prefix}${supportbot.SuggestCommand}!`);
+  async run(interaction) {
+    const { getChannel } = interaction.client;
+    const suggestChannel = await getChannel(
+      supportbot.SuggestionChannel,
+      interaction.guild
+    );
 
-        const errornochannel = new Discord.MessageEmbed()
-            .setTitle("Invalid Channel")
-            .setDescription(`${supportbot.InvalidChannel}\n\nChannel Required: \`${supportbot.SuggestionChannel}\``)
-            .setColor(supportbot.ErrorColour);
+    const NoChannel = new Discord.MessageEmbed()
+      .setTitle("Missing Channel!")
+      .setDescription(supportbot.InvalidChannel)
+      .setColor(supportbot.ErrorColour);
 
-        if(!locateChannel) return message.channel.send({ embed: errornochannel });
+    if (!suggestChannel) return interaction.reply({ embeds: [NoChannel] });
 
-        const embed = new Discord.MessageEmbed()
-            .setDescription(`> **${supportbot.SuggestionStarter}**`)
-	        .setColor(supportbot.EmbedColour)
-        message.channel.send({ embed: embed });
+    let suggestion = interaction.options.getString("suggestion");
 
-        let suggestion = []
-        message.channel.awaitMessages(response => response.content.length > 2, {
-            max: 1,
-            time: 500000,
-            errors: ['time'],
-        }).then((collected) => {
-            suggestion.push(collected.map(r => r.content));
+    const SuggestEmbed = new Discord.MessageEmbed()
+      .addField("Suggestion", suggestion, true)
+      .addField("From", `<@${interaction.user.id}>`)
+      .setThumbnail(interaction.user.displayAvatarURL())
+      .setFooter({
+        text: supportbot.EmbedFooter,
+        iconURL: interaction.user.displayAvatarURL(),
+      })
+      .setColor(supportbot.EmbedColour);
 
-            const SuggestionMessage = new Discord.MessageEmbed()
-                .setColor(supportbot.EmbedColour)
-                .setFooter(supportbot.EmbedFooter)
+    const suggestionMsg = await suggestChannel.send({ embeds: [SuggestEmbed] });
+    if (supportbot.SuggestionUpvote && supportbot.SuggestionDownvote) {
+      await suggestionMsg.react(supportbot.SuggestionUpvote);
+      await suggestionMsg.react(supportbot.SuggestionDownvote);
 
-                .setTitle(supportbot.SuggestionTitle)
-                .setDescription(`\`\`\`${suggestion}\`\`\``)
-
-                .addFields( { name: "From", value: `<@${message.author.id}>`, inline: false }, )
-
-            locateChannel.send({ embed: SuggestionMessage }).then(async function(msg) {
-                msg.react(supportbot.SuggestReact_1).then(() => msg.react(supportbot.SuggestReact_2));
-            });
-
-            const SuggestionComplete = new Discord.MessageEmbed()
-                .setColor(supportbot.SuccessColour)
-                .setDescription(`:white_check_mark: Your suggestion has been successfully created. <#${locateChannel.id}>`)
-            message.channel.send({ embed: SuggestionComplete })
-
-        });
+      if (supportbot.SuggestionThreads) {
+        await suggestionMsg.startThread({
+              name: `Suggestion-releated Thread`,
+              autoArchiveDuration: 60,
+              type: 'GUILD_PUBLIC_THREAD',
+              reason: 'Suggestion-releated thread',
+          })
     
+        }
     }
-};
+
+    const Submitted = new Discord.MessageEmbed()
+      .setTitle("Suggestion Submitted!")
+      .setDescription(
+        `:white_check_mark: You have successfully submitted a suggestion.`
+      )
+      .addField("Sent to:", `<#${suggestChannel.id}>`)
+      .setColor(supportbot.SuccessColour);
+
+    return interaction.reply({ 
+      ephemeral: true, 
+      embeds: [Submitted] 
+    })
+    
+  },
+});

@@ -1,0 +1,34 @@
+#      ___                            _    ___        _
+#    / __> _ _  ___  ___  ___  _ _ _| |_ | . > ___ _| |_
+#     \__ \| | || . \| . \/ . \| '_> | |  | . \/ . \ | |
+#     <___/`___||  _/|  _/\___/|_|   |_|  |___/\___/ |_|
+#                |_|  |_|
+#
+#           SupportBot created by Emerald Services
+#           Installed with MIT License
+#
+#           Discord Support: https://emeraldsrv.dev/discord
+#           Community Resources: https://emeraldsrv.dev/resources
+
+# -------------------------------
+#   Ticket Panel Configuration
+# -------------------------------
+
+TicketPanel: true
+
+# ----------------------------------------
+#   Ticket Panel Message Configuration
+# ----------------------------------------
+
+Channel: "ticket-creation"
+
+PanelTitle: "Need Help? Create a Support Ticket."
+PanelColour: "#f74343"
+
+TicketPanel_Description: true
+TicketPanel_Thumbnail: true
+TicketPanel_Image: true
+
+PanelMessage: "Click the button to open a new support ticket."
+PanelThumbnail: "https://i.imgur.com/ieeZejl.png"
+PanelImage: "https://i.imgur.com/5NkcmDq.png"

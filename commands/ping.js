@@ -1,27 +1,32 @@
-// SupportBot, Created by Emerald Services
+// SupportBot | Emerald Services
 // Ping Command
 
-const Discord = require("discord.js");
 const fs = require("fs");
 
-const yaml = require('js-yaml');
-const supportbot = yaml.load(fs.readFileSync('./supportbot-config.yml', 'utf8'));
+const Discord = require("discord.js");
+const yaml = require("js-yaml");
+const supportbot = yaml.load(
+  fs.readFileSync("./Configs/supportbot.yml", "utf8")
+);
+const cmdconfig = yaml.load(fs.readFileSync("./Configs/commands.yml", "utf8"));
 
-module.exports = {
-    name: supportbot.PingCommand,
-    description: supportbot.PingDesc,
+const Command = require("../Structures/Command.js");
 
-    execute(message, args) {        
-	if (supportbot.DeleteMessages == "true") message.delete();
-        
-    console.log(`\u001b[32m`, `[${supportbot.Bot_Name}]:`, `\u001b[32m`, `${message.author.tag} has executed ${supportbot.Prefix}${supportbot.PingCommand}!`)
+module.exports = new Command({
+  name: cmdconfig.PingCommand,
+  description: cmdconfig.PingCommandDesc,
+  options: [],
+  permissions: ["SEND_MESSAGES"],
 
-        let ping = Date.now() - message.createdTimestamp + " ms";
-        
-        const PingCommandEmbed = new Discord.MessageEmbed()
-            .setDescription(`🏓 **Pong!** \`${Date.now() - message.createdTimestamp}ms\``)
-            .setColor(supportbot.EmbedColour)
+  async run(interaction) {
+    const PingEmbed = new Discord.MessageEmbed()
+      .setDescription(
+        `:ping_pong: **Ping:** \`${interaction.client.ws.ping} ms\``
+      )
+      .setColor(supportbot.EmbedColour);
 
-	    message.channel.send({ embed: PingCommandEmbed });
-    }
-};
+    interaction.reply({
+      embeds: [PingEmbed],
+    });
+  },
+});

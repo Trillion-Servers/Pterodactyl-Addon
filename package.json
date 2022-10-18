@@ -1,28 +1,26 @@
 {
   "name": "supportbot",
-  "version": "6.1",
-  "description": "SupportBot | #1 Self-Hosted Ticket Bot",
+  "version": "7.7b",
+  "description": "SupportBot is an open-sourced support system for discord. It's completely free to use with high amounts of customization to match your own brand.",
   "main": "index.js",
-  "dependencies": {
-    "discord.js": "^12.5.1",
-    "fs": "0.0.1-security",
-    "javascript-obfuscator": "^2.9.4",
-    "js-yaml": "^4.0.0"
-  },
-  "devDependencies": {
-    "node-fetch": ">=2.6.1"
-  },
   "scripts": {
-    "test": "help"
+    "start": "npm i && node index.js",
+    "test": "node index.js test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/1tzemerald/SupportBot.git"
+    "url": "git+https://github.com/Emerald-Services/SupportBot.git"
   },
   "author": "Emerald Services",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/1tzemerald/SupportBot/issues"
+    "url": "https://github.com/Emerald-Services/SupportBot/issues"
   },
-  "homepage": "https://emeraldsrv.dev"
+  "homepage": "https://github.com/Emerald-Services/SupportBot#readme",
+  "dependencies": {
+    "@vitalets/google-translate-api": "^8.0.0",
+    "discord.js": "^13.6.0",
+    "js-yaml": "^4.1.0",
+    "moment": "^2.29.3"
+  }
 }

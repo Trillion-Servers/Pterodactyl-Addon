@@ -1,48 +1,41 @@
-// SupportBot 6.0, Created by Emerald Services
-// Ready Event
 
-const Discord = require("discord.js");
+const Discord = require('discord.js');
 const fs = require("fs");
+const Event = require("../Structures/Event.js");
+const yaml = require("js-yaml");
+const supportbot = yaml.load(
+  fs.readFileSync("./Configs/supportbot.yml", "utf8")
+);
 
-const yaml = require('js-yaml');
-const supportbot = yaml.load(fs.readFileSync('./supportbot-config.yml', 'utf8'));
+module.exports = new Event("guildMemberRemove", async (client, member, interaction, guild) => {
 
-module.exports = async (bot, member) => {
+    if (supportbot.Leave) {
+        const LeaveChannel = member.guild.channels.cache.find(channel => channel.name === supportbot.LeaveChannel)
 
-  if (supportbot.SystemMessages === "true") {
-    const SystemChannel = member.guild.channels.cache.find(channel => channel.name === supportbot.SystemMessage_Channel)
+        const LeaveEmbed = new Discord.MessageEmbed()
+            .setColor(supportbot.LeaveColour)
+            .setTitle(supportbot.LeaveTitle)
+            .setDescription(supportbot.LeaveMessage.replace(/%joined_user%/g, member.user))
+            .setTimestamp();
     
-    if (!SystemChannel) return;
+            if (supportbot.EmbedLeaveThumbnail === "BOT") {
+                LeaveEmbed.setThumbnail(client.user.displayAvatarURL())
+            }
     
-    console.log(`[${supportbot.Bot_Name}]: ${member.user.username} has left ${member.guild.name}!`)
-
-    if (supportbot.SystemMessage_Type === "embed") {
-      const GuildRemoveMember = new Discord.MessageEmbed()
-        .setTitle(supportbot.Leave_Title)
-        .setDescription(supportbot.LeaveMessage.replace(/%member%/g, member.user.username).replace(/%guildname%/g, member.guild.name))
-        .setColor(supportbot.EmbedColour)
-
-        if (supportbot.SystemMessage_Icon === "BOT") {
-          GuildRemoveMember.setThumbnail(bot.user.displayAvatarURL())
-        }
-
-        if (supportbot.SystemMessage_Icon === "USER") {
-          GuildRemoveMember.setThumbnail(member.user.displayAvatarURL())
-        }
-
-
-        if (supportbot.SystemMessage_EmbedFooter === "true") {
-          GuildRemoveMember.setFooter(supportbot.EmbedFooter)
-        }
-
-    SystemChannel.send({ embed: GuildRemoveMember });
-        
+            if (supportbot.EmbedLeaveThumbnail === "USER") {
+                LeaveEmbed.setThumbnail(member.user.displayAvatarURL())
+            }
+    
+            if (supportbot.EmbedLeaveImage) {
+                LeaveEmbed.setImage(supportbot.EmbedLeaveImageURL)
+            }
+    
+            LeaveChannel.send({
+                embeds: [LeaveEmbed]
+            })
+    
+            console.log(`\u001b[31m`, `[-]`, `\u001b[33m`, `${member.user.username} joined the server!`)
     }
 
-    if (supportbot.SystemMessage_Type === "normal") {
-        SystemChannel.send(supportbot.LeaveMessage.replace(/%member%/g, member.user.username).replace(/%guildname%/g, member.guild.name))
+});
 
-    }
-
-  }
-};

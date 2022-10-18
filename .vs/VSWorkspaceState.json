@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\addons"
+    "\\addons",
+    "\\commands"
   ],
-  "SelectedNode": "\\supportbot-config.yml",
+  "SelectedNode": "\\README.md",
   "PreviewInSolutionExplorer": false
 }
